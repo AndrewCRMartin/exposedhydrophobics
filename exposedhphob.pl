@@ -4,8 +4,8 @@
 #   Program:    exposedhphob
 #   File:       exposedhphob.pl
 #   
-#   Version:    V1.0
-#   Date:       20.11.20
+#   Version:    V1.0.1
+#   Date:       27.11.20
 #   Function:   Calculate a quality score for exposure of hydrophobic/
 #               hydrophilic residues
 #   
@@ -48,6 +48,7 @@
 #   Revision History:
 #   =================
 #   V1.0    20.11.20 Original   By: ACRM
+#   V1.0.1  27.11.20 Caps all accessibilties at 1.0 (100%)
 #
 #*************************************************************************
 use strict;
@@ -205,6 +206,10 @@ sub RunPdbsolv
             $inRange = 1 if($resId eq $startRes);
             if($inRange)
             {
+                # Cap at 100% accessibility (for terminal residues and
+                # those with distorted geometry)
+                $resAccess = 100.0 if($resAccess > 100.0);
+
                 push @resIds,   $resId;
                 push @sequence, $aa;
                 push @access,   $resAccess / 100.0;
@@ -353,7 +358,7 @@ sub UsageDie
     
     print <<__EOF;
 
-exposedhphob.pl V1.0 (c) 2020 UCL, Prof. Andrew C.R. Martin.
+exposedhphob.pl V1.0.1 (c) 2020 UCL, Prof. Andrew C.R. Martin.
 
 Usage: exposedhbob.pl [-hphob=hphobfile] startres stopres file.pdb
        -hphob   - specify hydrophobicity file [$HPhobFile]
